@@ -99,8 +99,8 @@ jobs:
       - name: Set version
         run: |
           npm version ${{ needs.prepare.outputs.version }} --no-git-tag-version
-          node -e "const fs=require('fs');const file='src-tauri/tauri.conf.json';const data=JSON.parse(fs.readFileSync(file,'utf8'));data.version='${{ needs.prepare.outputs.version }}';fs.writeFileSync(file, JSON.stringify(data, null, 2)+'\\n');"
-          node -e "const fs=require('fs');const file='src-tauri/Cargo.toml';let data=fs.readFileSync(file,'utf8');data=data.replace('version = \"', 'version = \"${{ needs.prepare.outputs.version }}\"');fs.writeFileSync(file,data);"
+          node -e 'const fs=require("fs");const file="src-tauri/tauri.conf.json";const data=JSON.parse(fs.readFileSync(file,"utf8"));data.version="${{ needs.prepare.outputs.version }}";fs.writeFileSync(file, JSON.stringify(data, null, 2)+"\n");'
+          node -e 'const fs=require("fs");const file="src-tauri/Cargo.toml";let data=fs.readFileSync(file,"utf8");data=data.replace(/^version\\s*=\\s*\"[^\"]+\"/m, "version = \"${{ needs.prepare.outputs.version }}\"");fs.writeFileSync(file,data);'
 
       - name: Build
         run: npm run build
@@ -129,8 +129,8 @@ jobs:
       - name: Apply version bump
         run: |
           npm version ${{ needs.prepare.outputs.version }} --no-git-tag-version
-          node -e "const fs=require('fs');const file='src-tauri/tauri.conf.json';const data=JSON.parse(fs.readFileSync(file,'utf8'));data.version='${{ needs.prepare.outputs.version }}';fs.writeFileSync(file, JSON.stringify(data, null, 2)+'\\n');"
-          node -e "const fs=require('fs');const file='src-tauri/Cargo.toml';let data=fs.readFileSync(file,'utf8');data=data.replace('version = \"', 'version = \"${{ needs.prepare.outputs.version }}\"');fs.writeFileSync(file,data);"
+          node -e 'const fs=require("fs");const file="src-tauri/tauri.conf.json";const data=JSON.parse(fs.readFileSync(file,"utf8"));data.version="${{ needs.prepare.outputs.version }}";fs.writeFileSync(file, JSON.stringify(data, null, 2)+"\n");'
+          node -e 'const fs=require("fs");const file="src-tauri/Cargo.toml";let data=fs.readFileSync(file,"utf8");data=data.replace(/^version\\s*=\\s*\"[^\"]+\"/m, "version = \"${{ needs.prepare.outputs.version }}\"");fs.writeFileSync(file,data);'
 
       - name: Commit and tag
         run: |
