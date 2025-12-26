@@ -148,9 +148,13 @@ jobs:
           merge-multiple: true
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ needs.prepare.outputs.version }}
-          name: v${{ needs.prepare.outputs.version }}
-          generate_release_notes: true
-          files: artifacts/**
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ needs.prepare.outputs.version }}"
+          FILES=$(find artifacts -type f | tr '\n' ' ')
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" $FILES --clobber
+          else
+            gh release create "$TAG" $FILES --title "$TAG" --generate-notes
+          fi
