@@ -10,9 +10,9 @@ async function download(bytes: Uint8Array | string, filename: string, type: stri
   const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
 
   if (isTauri) {
-    const [{ save }, { writeBinaryFile }] = await Promise.all([
-      import('@tauri-apps/api/dialog'),
-      import('@tauri-apps/api/fs')
+    const [{ save }, { writeFile }] = await Promise.all([
+      import('@tauri-apps/plugin-dialog'),
+      import('@tauri-apps/plugin-fs')
     ]);
     const chosenPath = await save({
       defaultPath: filename,
@@ -20,7 +20,7 @@ async function download(bytes: Uint8Array | string, filename: string, type: stri
     });
     if (!chosenPath) return;
     const payload = typeof bytes === 'string' ? new TextEncoder().encode(bytes) : bytes;
-    await writeBinaryFile(chosenPath, payload);
+    await writeFile(chosenPath, payload);
     return;
   }
 
