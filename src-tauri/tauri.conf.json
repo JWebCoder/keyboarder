@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "KeyLabelLayout",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "identifier": "com.example.keylabellayout",
   "build": {
     "beforeBuildCommand": "vite build",
@@ -23,12 +23,26 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["appimage", "deb", "rpm", "nsis", "msi"],
-    "icon": ["icons/icon.png", "icons/icon.ico", "icons/icon.icns"]
+    "targets": [
+      "appimage",
+      "deb",
+      "rpm",
+      "nsis",
+      "msi"
+    ],
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
+    ]
   },
   "plugins": {
     "fs": {
-      "scope": ["$APPDATA/**", "$HOME/**", "$RESOURCE/**"]
+      "scope": [
+        "$APPDATA/**",
+        "$HOME/**",
+        "$RESOURCE/**"
+      ]
     },
     "dialog": null
   }
