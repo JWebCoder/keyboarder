@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: tauri-release
+  cancel-in-progress: true
+
 jobs:
   prepare:
     if: github.event_name == 'workflow_dispatch' || (github.actor != 'github-actions[bot]' && !startsWith(github.event.head_commit.message, 'chore(release):'))
@@ -158,18 +162,34 @@ jobs:
         run: |
           TAG="v${{ needs.prepare.outputs.version }}"
           mkdir -p uploads
+          keep_asset() {
+            case "$1" in
+              *.AppImage|*.appimage|*.deb|*.rpm|*.msi|*.exe) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
           for file in $(find artifacts/linux -type f); do
+            keep_asset "$file" || continue
             base=$(basename "$file")
             cp "$file" "uploads/linux-${base}"
           done
           for file in $(find artifacts/windows -type f); do
+            keep_asset "$file" || continue
             base=$(basename "$file")
             cp "$file" "uploads/windows-${base}"
           done
-          FILES=$(find uploads -type f | tr '\n' ' ')
           TARGET=$(git rev-parse HEAD)
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" $FILES --clobber || true
+            echo "Release $TAG exists, replacing assets..."
           else
-            gh release create "$TAG" $FILES --title "$TAG" --generate-notes --target "$TARGET"
+            gh release create "$TAG" --title "$TAG" --generate-notes --target "$TARGET"
           fi
+          for file in uploads/*; do
+            [ -e "$file" ] || continue
+            name=$(basename "$file")
+            asset_id=$(gh release view "$TAG" --json assets --jq ".assets[] | select(.name==\"$name\") | .id")
+            if [ -n "$asset_id" ]; then
+              gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}"
+            fi
+            gh release upload "$TAG" "$file"
+          done
