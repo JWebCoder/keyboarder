@@ -1,0 +1,137 @@
+{
+  "id": "sample-project",
+  "name": "Sample Macro Pad",
+  "paper": {
+    "size": "A4",
+    "orientation": "portrait",
+    "marginMm": 8,
+    "dpi": 300
+  },
+  "layout": {
+    "id": "layout-1",
+    "name": "2x2 Pad",
+    "keys": [
+      {
+        "id": "k1",
+        "x": 0,
+        "y": 0,
+        "width": 18.5,
+        "height": 18.5,
+        "padding": 2,
+        "cornerRadius": 2,
+        "background": "#1f2a3a",
+        "elements": [
+          {
+            "id": "t1",
+            "type": "text",
+            "text": "Play",
+            "fontFamily": "Inter",
+            "fontSize": 11,
+            "fontWeight": 700,
+            "color": "#f8fafc",
+            "x": 0,
+            "y": 0,
+            "width": 18.5,
+            "height": 18.5,
+            "align": "center",
+            "alignX": "center",
+            "alignY": "center",
+            "padding": 2,
+            "zIndex": 2
+          }
+        ]
+      },
+      {
+        "id": "k2",
+        "x": 21,
+        "y": 0,
+        "width": 18.5,
+        "height": 18.5,
+        "padding": 2,
+        "cornerRadius": 2,
+        "background": "#243447",
+        "elements": [
+          {
+            "id": "t2",
+            "type": "text",
+            "text": "Next",
+            "fontFamily": "Inter",
+            "fontSize": 11,
+            "fontWeight": 600,
+            "color": "#9cffb8",
+            "x": 0,
+            "y": 0,
+            "width": 18.5,
+            "height": 18.5,
+            "align": "center",
+            "alignX": "center",
+            "alignY": "center",
+            "padding": 2,
+            "zIndex": 2
+          }
+        ]
+      },
+      {
+        "id": "k3",
+        "x": 0,
+        "y": 21,
+        "width": 18.5,
+        "height": 18.5,
+        "padding": 2,
+        "cornerRadius": 2,
+        "background": "#16202f",
+        "elements": [
+          {
+            "id": "t3",
+            "type": "text",
+            "text": "Mic",
+            "fontFamily": "Inter",
+            "fontSize": 11,
+            "fontWeight": 600,
+            "color": "#61dafb",
+            "x": 0,
+            "y": 0,
+            "width": 18.5,
+            "height": 18.5,
+            "align": "center",
+            "alignX": "center",
+            "alignY": "center",
+            "padding": 2,
+            "zIndex": 2
+          }
+        ]
+      },
+      {
+        "id": "k4",
+        "x": 21,
+        "y": 21,
+        "width": 18.5,
+        "height": 18.5,
+        "padding": 2,
+        "cornerRadius": 2,
+        "background": "#1b2534",
+        "elements": [
+          {
+            "id": "t4",
+            "type": "text",
+            "text": "Record",
+            "fontFamily": "Inter",
+            "fontSize": 11,
+            "fontWeight": 600,
+            "color": "#f8fafc",
+            "x": 0,
+            "y": 0,
+            "width": 18.5,
+            "height": 18.5,
+            "align": "center",
+            "alignX": "center",
+            "alignY": "center",
+            "padding": 2,
+            "zIndex": 2
+          }
+        ]
+      }
+    ]
+  },
+  "updatedAt": "2023-12-25T00:00:00.000Z"
+}

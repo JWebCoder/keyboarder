@@ -1,0 +1,38 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "package": {
+    "productName": "KeyLabelLayout",
+    "version": "0.1.0"
+  },
+  "build": {
+    "beforeBuildCommand": "vite build",
+    "beforeDevCommand": "vite dev",
+    "devPath": "http://localhost:5173",
+    "distDir": "../dist"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "fs": {
+        "all": true,
+        "scope": ["$APPDATA/**", "$HOME/**", "$RESOURCE/**"]
+      },
+      "dialog": {
+        "all": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": ["appimage", "deb", "rpm"],
+      "identifier": "com.example.keylabellayout",
+      "icon": ["icons/icon.png", "icons/icon.ico", "icons/icon.icns"]
+    },
+    "windows": [
+      {
+        "title": "Key Label Layout",
+        "width": 1200,
+        "height": 820
+      }
+    ]
+  }
+}
