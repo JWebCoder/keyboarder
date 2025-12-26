@@ -23,13 +23,13 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["appimage", "deb", "rpm"],
+    "targets": ["appimage", "deb", "rpm", "nsis", "msi"],
     "icon": ["icons/icon.png", "icons/icon.ico", "icons/icon.icns"]
   },
   "plugins": {
     "fs": {
       "scope": ["$APPDATA/**", "$HOME/**", "$RESOURCE/**"]
     },
-    "dialog": {}
+    "dialog": null
   }
 }
