@@ -140,18 +140,33 @@ jobs:
           git commit -m "chore(release): v${{ needs.prepare.outputs.version }}"
           git push
 
-      - name: Download artifacts
+      - name: Download Linux artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
-          merge-multiple: true
+          name: key-label-layout-ubuntu-24.04
+          path: artifacts/linux
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: key-label-layout-windows-latest
+          path: artifacts/windows
 
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="v${{ needs.prepare.outputs.version }}"
-          FILES=$(find artifacts -type f | tr '\n' ' ')
+          mkdir -p uploads
+          for file in $(find artifacts/linux -type f); do
+            base=$(basename "$file")
+            cp "$file" "uploads/linux-${base}"
+          done
+          for file in $(find artifacts/windows -type f); do
+            base=$(basename "$file")
+            cp "$file" "uploads/windows-${base}"
+          done
+          FILES=$(find uploads -type f | tr '\n' ' ')
           TARGET=$(git rev-parse HEAD)
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" $FILES --clobber
