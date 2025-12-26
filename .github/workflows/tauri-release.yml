@@ -169,7 +169,7 @@ jobs:
           FILES=$(find uploads -type f | tr '\n' ' ')
           TARGET=$(git rev-parse HEAD)
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" $FILES --clobber
+            gh release upload "$TAG" $FILES --clobber || true
           else
             gh release create "$TAG" $FILES --title "$TAG" --generate-notes --target "$TARGET"
           fi
