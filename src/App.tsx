@@ -7,21 +7,32 @@ import { exportProjectToPdf, exportProjectToSvg } from './utils/exporters';
 import { paperSizeMm } from './utils/units';
 
 async function download(bytes: Uint8Array | string, filename: string, type: string) {
-  const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+  const isTauri = await (async () => {
+    try {
+      const { isTauri } = await import('@tauri-apps/api/core');
+      return isTauri();
+    } catch {
+      return typeof window !== 'undefined' && ('__TAURI__' in window || '__TAURI_INTERNALS__' in window);
+    }
+  })();
 
   if (isTauri) {
-    const [{ save }, { writeFile }] = await Promise.all([
-      import('@tauri-apps/plugin-dialog'),
-      import('@tauri-apps/plugin-fs')
-    ]);
-    const chosenPath = await save({
-      defaultPath: filename,
-      filters: [{ name: type.includes('pdf') ? 'PDF' : type.includes('svg') ? 'SVG' : 'File', extensions: [filename.split('.').pop() || 'dat'] }]
-    });
-    if (!chosenPath) return;
-    const payload = typeof bytes === 'string' ? new TextEncoder().encode(bytes) : bytes;
-    await writeFile(chosenPath, payload);
-    return;
+    try {
+      const [{ save }, { writeFile }] = await Promise.all([
+        import('@tauri-apps/plugin-dialog'),
+        import('@tauri-apps/plugin-fs')
+      ]);
+      const chosenPath = await save({
+        defaultPath: filename,
+        filters: [{ name: type.includes('pdf') ? 'PDF' : type.includes('svg') ? 'SVG' : 'File', extensions: [filename.split('.').pop() || 'dat'] }]
+      });
+      if (!chosenPath) return;
+      const payload = typeof bytes === 'string' ? new TextEncoder().encode(bytes) : bytes;
+      await writeFile(chosenPath, payload);
+      return;
+    } catch (err) {
+      console.error('Export failed in Tauri runtime:', err);
+    }
   }
 
   const blobPart: BlobPart = typeof bytes === 'string' ? bytes : new Uint8Array(bytes);
