@@ -6,19 +6,7 @@
     "core:default",
     "dialog:allow-open",
     "dialog:allow-save",
-    {
-      "identifier": "fs:allow-read-file",
-      "allow": [
-        { "path": "$HOME/**" },
-        { "path": "$APPDATA/**" }
-      ]
-    },
-    {
-      "identifier": "fs:allow-write-file",
-      "allow": [
-        { "path": "$HOME/**" },
-        { "path": "$APPDATA/**" }
-      ]
-    }
+    "fs:read-all",
+    "fs:write-all"
   ]
 }
