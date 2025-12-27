@@ -1689,8 +1689,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "keylabellayout"
-version = "0.1.0"
+name = "keyboarder"
+version = "0.1.1"
 dependencies = [
  "serde",
  "serde_json",

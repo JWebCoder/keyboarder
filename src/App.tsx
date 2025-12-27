@@ -7,21 +7,32 @@ import { exportProjectToPdf, exportProjectToSvg } from './utils/exporters';
 import { paperSizeMm } from './utils/units';
 
 async function download(bytes: Uint8Array | string, filename: string, type: string) {
-  const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+  const isTauri = await (async () => {
+    try {
+      const { isTauri } = await import('@tauri-apps/api/core');
+      return isTauri();
+    } catch {
+      return typeof window !== 'undefined' && ('__TAURI__' in window || '__TAURI_INTERNALS__' in window);
+    }
+  })();
 
   if (isTauri) {
-    const [{ save }, { writeFile }] = await Promise.all([
-      import('@tauri-apps/plugin-dialog'),
-      import('@tauri-apps/plugin-fs')
-    ]);
-    const chosenPath = await save({
-      defaultPath: filename,
-      filters: [{ name: type.includes('pdf') ? 'PDF' : type.includes('svg') ? 'SVG' : 'File', extensions: [filename.split('.').pop() || 'dat'] }]
-    });
-    if (!chosenPath) return;
-    const payload = typeof bytes === 'string' ? new TextEncoder().encode(bytes) : bytes;
-    await writeFile(chosenPath, payload);
-    return;
+    try {
+      const [{ save }, { writeFile }] = await Promise.all([
+        import('@tauri-apps/plugin-dialog'),
+        import('@tauri-apps/plugin-fs')
+      ]);
+      const chosenPath = await save({
+        defaultPath: filename,
+        filters: [{ name: type.includes('pdf') ? 'PDF' : type.includes('svg') ? 'SVG' : 'File', extensions: [filename.split('.').pop() || 'dat'] }]
+      });
+      if (!chosenPath) return;
+      const payload = typeof bytes === 'string' ? new TextEncoder().encode(bytes) : bytes;
+      await writeFile(chosenPath, payload);
+      return;
+    } catch (err) {
+      console.error('Export failed in Tauri runtime:', err);
+    }
   }
 
   const blobPart: BlobPart = typeof bytes === 'string' ? bytes : new Uint8Array(bytes);
@@ -94,6 +105,7 @@ function buildCutProject(project: any, gap = 0.3) {
 }
 
 export default function App() {
+  const storageKey = 'keyboarder-project';
   const {
     project,
     selectedKeys,
@@ -120,7 +132,7 @@ export default function App() {
   useEffect(() => setZoomValue(zoom), [zoom]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('key-label-project');
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         useEditorStore.setState({ project: JSON.parse(saved) });
@@ -131,7 +143,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('key-label-project', JSON.stringify(project));
+    localStorage.setItem(storageKey, JSON.stringify(project));
   }, [project]);
 
   useEffect(() => {
@@ -288,7 +300,7 @@ export default function App() {
         <div className="modal-backdrop" onClick={() => setShowHelp(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>How to use Key Label Layout</h2>
+              <h2>How to use Keyboarder</h2>
               <button className="button-ghost" onClick={() => setShowHelp(false)}>
                 Close
               </button>

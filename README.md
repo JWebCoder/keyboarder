@@ -1,4 +1,4 @@
-# Key Label Layout
+# Keyboarder
 
 Local-first desktop app (React + Tauri) for designing printable keycap labels and cut sheets for macro pads / programmable keyboards.
 
