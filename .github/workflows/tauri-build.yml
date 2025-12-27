@@ -19,24 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Resolve workdir
-        shell: bash
-        run: |
-          if [ -f "package.json" ]; then
-            echo "WORKDIR=." >> "$GITHUB_ENV"
-          elif [ -f "app/package.json" ]; then
-            echo "WORKDIR=app" >> "$GITHUB_ENV"
-          else
-            echo "WORKDIR=." >> "$GITHUB_ENV"
-          fi
-          echo "CARGO_TARGET_DIR=target" >> "$GITHUB_ENV"
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: ${{ env.WORKDIR }}/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -47,8 +35,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            ${{ env.WORKDIR }}/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock', 'app/src-tauri/Cargo.lock') }}
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
 
@@ -70,14 +58,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ${{ env.WORKDIR }}
 
       - name: Build
         run: npm run build
-        working-directory: ${{ env.WORKDIR }}
 
       - name: Upload bundles
         uses: actions/upload-artifact@v4
         with:
           name: keyboarder-${{ matrix.os }}
-          path: ${{ env.WORKDIR }}/target/release/bundle/**
+          path: target/release/bundle/**
