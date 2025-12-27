@@ -94,6 +94,7 @@ function buildCutProject(project: any, gap = 0.3) {
 }
 
 export default function App() {
+  const storageKey = 'keyboarder-project';
   const {
     project,
     selectedKeys,
@@ -120,7 +121,7 @@ export default function App() {
   useEffect(() => setZoomValue(zoom), [zoom]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('key-label-project');
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         useEditorStore.setState({ project: JSON.parse(saved) });
@@ -131,7 +132,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('key-label-project', JSON.stringify(project));
+    localStorage.setItem(storageKey, JSON.stringify(project));
   }, [project]);
 
   useEffect(() => {
@@ -288,7 +289,7 @@ export default function App() {
         <div className="modal-backdrop" onClick={() => setShowHelp(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>How to use Key Label Layout</h2>
+              <h2>How to use Keyboarder</h2>
               <button className="button-ghost" onClick={() => setShowHelp(false)}>
                 Close
               </button>

@@ -60,7 +60,7 @@ function blankLayout(name = 'New Layout'): KeyboardLayout {
 function defaultProject(): ProjectModel {
   return {
     id: nanoid(),
-    name: 'Key Label Layout',
+    name: 'Keyboarder',
     paper: {
       size: 'A4',
       orientation: 'portrait',

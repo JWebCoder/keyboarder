@@ -67,6 +67,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, windows-latest]
+    env:
+      CARGO_TARGET_DIR: target
 
     steps:
       - name: Checkout
@@ -80,6 +82,17 @@ jobs:
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-24.04'
@@ -98,7 +111,7 @@ jobs:
             rpm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Set version
         run: |
@@ -112,7 +125,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: key-label-layout-${{ matrix.os }}
+          name: keyboarder-${{ matrix.os }}
           path: src-tauri/target/release/bundle/**
 
   release:
@@ -147,13 +160,13 @@ jobs:
       - name: Download Linux artifacts
         uses: actions/download-artifact@v4
         with:
-          name: key-label-layout-ubuntu-24.04
+          name: keyboarder-ubuntu-24.04
           path: artifacts/linux
 
       - name: Download Windows artifacts
         uses: actions/download-artifact@v4
         with:
-          name: key-label-layout-windows-latest
+          name: keyboarder-windows-latest
           path: artifacts/windows
 
       - name: Create release

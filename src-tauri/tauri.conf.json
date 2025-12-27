@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "KeyLabelLayout",
+  "productName": "Keyboarder",
   "version": "0.1.5",
-  "identifier": "com.example.keylabellayout",
+  "identifier": "com.example.keyboarder",
   "build": {
     "beforeBuildCommand": "vite build",
     "beforeDevCommand": "vite dev",
@@ -15,7 +15,7 @@
     },
     "windows": [
       {
-        "title": "Key Label Layout",
+        "title": "Keyboarder",
         "width": 1200,
         "height": 820
       }
@@ -30,6 +30,11 @@
       "nsis",
       "msi"
     ],
+    "publisher": "JWebCoder",
+    "homepage": "https://github.com/JWebCoder/keyboarder",
+    "category": "Productivity",
+    "shortDescription": "Design and print key labels for macro pads and keyboards.",
+    "longDescription": "Keyboarder is a local-first app to design printable key label layouts.\nCreate keys in millimeters, add text, icons, and shapes, and export to scale-accurate PDF or SVG.\nIncludes layout templates, snap-to-grid editing, multi-select, and a cut-sheet view for easier trimming.",
     "icon": [
       "icons/icon.png",
       "icons/icon.ico",
