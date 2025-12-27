@@ -7,6 +7,14 @@
     "dialog:allow-open",
     "dialog:allow-save",
     "fs:read-all",
-    "fs:write-all"
+    "fs:write-all",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        { "path": "$HOME/**" },
+        { "path": "$APPDATA/**" },
+        { "path": "$DOWNLOAD/**" }
+      ]
+    }
   ]
 }
