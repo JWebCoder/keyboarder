@@ -73,6 +73,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Resolve workdir
+        shell: bash
         run: |
           if [ -f "package.json" ]; then
             echo "WORKDIR=." >> "$GITHUB_ENV"
@@ -151,6 +152,7 @@ jobs:
           fetch-depth: 0
 
       - name: Resolve workdir
+        shell: bash
         run: |
           if [ -f "package.json" ]; then
             echo "WORKDIR=." >> "$GITHUB_ENV"
