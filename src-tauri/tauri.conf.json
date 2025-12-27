@@ -11,7 +11,8 @@
   },
   "app": {
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": ["default"]
     },
     "windows": [
       {
@@ -43,11 +44,7 @@
   },
   "plugins": {
     "fs": {
-      "scope": [
-        "$APPDATA/**",
-        "$HOME/**",
-        "$RESOURCE/**"
-      ]
+      "requireLiteralLeadingDot": false
     },
     "dialog": null
   }
