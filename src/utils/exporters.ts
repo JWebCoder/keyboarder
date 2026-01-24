@@ -2,13 +2,51 @@ import { PDFDocument, degrees, rgb } from 'pdf-lib';
 import { ProjectModel, KeyElement } from '../types';
 import { mmToPoints, paperSizeMm } from './units';
 
+function getDataUrlMime(dataUrl: string): string | undefined {
+  const match = /^data:([^;,]+)[;,]/i.exec(dataUrl);
+  return match?.[1]?.toLowerCase();
+}
+
+function dataUrlToBytes(dataUrl: string): Uint8Array | undefined {
+  const data = dataUrl.split(',')[1];
+  if (!data) return undefined;
+  return Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+}
+
+async function convertDataUrlToPng(dataUrl: string): Promise<string | undefined> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(undefined);
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = () => resolve(undefined);
+    img.src = dataUrl;
+  });
+}
+
 async function embedImage(doc: PDFDocument, el: KeyElement) {
   if (el.type !== 'image') return undefined;
-  const data = el.dataUrl.split(',')[1];
-  if (!data) return undefined;
-  const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
-  if (el.dataUrl.startsWith('data:image/png')) return doc.embedPng(bytes);
-  return doc.embedJpg(bytes);
+  const dataUrl = el.dataUrl;
+  if (!dataUrl) return undefined;
+  const mime = getDataUrlMime(dataUrl);
+  const bytes = dataUrlToBytes(dataUrl);
+  if (bytes && mime === 'image/png') return doc.embedPng(bytes);
+  if (bytes && (mime === 'image/jpeg' || mime === 'image/jpg')) return doc.embedJpg(bytes);
+
+  const converted = await convertDataUrlToPng(dataUrl);
+  if (!converted) return undefined;
+  const convertedBytes = dataUrlToBytes(converted);
+  if (!convertedBytes) return undefined;
+  return doc.embedPng(convertedBytes);
 }
 
 export async function exportProjectToPdf(project: ProjectModel, includeRuler = true): Promise<Uint8Array> {

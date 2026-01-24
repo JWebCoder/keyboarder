@@ -14,8 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, windows-latest]
-    env:
-      CARGO_TARGET_DIR: target
 
     steps:
       - name: Checkout
@@ -26,6 +24,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -36,7 +35,7 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            src-tauri/target
+            target
           key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
@@ -67,4 +66,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: keyboarder-${{ matrix.os }}
-          path: src-tauri/target/release/bundle/**
+          path: target/release/bundle/**

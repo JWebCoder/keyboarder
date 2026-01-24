@@ -1,5 +1,17 @@
 # Keyboarder
 
+[![Build (Tauri)](https://github.com/JWebCoder/keyboarder/actions/workflows/tauri-build.yml/badge.svg)](https://github.com/JWebCoder/keyboarder/actions/workflows/tauri-build.yml)
+[![Release (Tauri)](https://github.com/JWebCoder/keyboarder/actions/workflows/tauri-release.yml/badge.svg)](https://github.com/JWebCoder/keyboarder/actions/workflows/tauri-release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/JWebCoder/keyboarder)](https://github.com/JWebCoder/keyboarder/releases)
+
+## Links
+- Web app (Vercel): https://keyboarder.vercel.app
+- Releases: https://github.com/JWebCoder/keyboarder/releases
+- Issues: https://github.com/JWebCoder/keyboarder/issues
+
+## Screenshot
+![Keyboarder editor](docs/screenshot.png)
+
 Local-first desktop app (React + Tauri) for designing printable keycap labels and cut sheets for macro pads / programmable keyboards.
 
 ## Features
