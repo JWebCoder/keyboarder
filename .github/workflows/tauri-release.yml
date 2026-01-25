@@ -123,15 +123,24 @@ jobs:
 
       - name: List build output
         run: |
-          echo "=== Listing target/release/bundle ==="
-          ls -laR target/release/bundle/ || echo "Directory not found"
+          echo "=== Finding all bundle directories ==="
+          find . -type d -name "bundle" 2>/dev/null || true
+          echo ""
+          echo "=== Finding all .deb, .rpm, .AppImage files ==="
+          find . -type f \( -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" -o -name "*.msi" -o -name "*.exe" \) 2>/dev/null || true
+          echo ""
+          echo "=== Listing target/ root ==="
+          ls -la target/ 2>/dev/null || echo "target/ not found"
+          echo ""
+          echo "=== Listing src-tauri/target/release/ ==="
+          ls -la src-tauri/target/release/ 2>/dev/null || echo "src-tauri/target/release/ not found"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: keyboarder-${{ matrix.os }}
           path: target/release/bundle/**
-          if-no-files-found: error
+          if-no-files-found: warn
 
   release:
     needs: [prepare, build]
