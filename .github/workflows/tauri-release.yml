@@ -121,11 +121,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: List build output
+        run: |
+          echo "=== Listing target/release/bundle ==="
+          ls -laR target/release/bundle/ || echo "Directory not found"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: keyboarder-${{ matrix.os }}
           path: target/release/bundle/**
+          if-no-files-found: error
 
   release:
     needs: [prepare, build]
